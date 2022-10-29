@@ -3,11 +3,6 @@ import { app, BrowserWindow } from 'electron';
 import Message from './Message';
 import Widget from './Widget';
 
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  app.quit();
-}
-
 const make_app_instance = (): void => {
   Widget.tray_icon.setToolTip(Message.tray_tooltip);
   Widget.tray_icon.setContextMenu(Widget.main_menu);
