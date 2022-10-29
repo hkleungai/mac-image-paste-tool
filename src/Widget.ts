@@ -1,4 +1,4 @@
-import { Menu, Notification, Tray } from 'electron';
+import { Menu, MenuItemConstructorOptions, Notification, Tray } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
@@ -36,7 +36,7 @@ class Widget {
 
     const sticker_folders = fs.readdirSync(FileSystem.sticker);
 
-    const contextMenuTemplate = sticker_folders.map(folder => {
+    const contextMenuTemplate = sticker_folders.map<MenuItemConstructorOptions>(folder => {
       const absolute_folder = path.resolve(FileSystem.sticker, folder);
       const png_files = fs.readdirSync(absolute_folder).filter(file => /\.png/.test(file));
 
@@ -44,17 +44,17 @@ class Widget {
       const icon = Operation.create_image(last_png_file, 100);
 
       const submenu = png_files.map(png_file => ({
-        label: png_file.replace(/\.png/, ''),
+        label: ' ',
         icon: Operation.create_image(path.resolve(absolute_folder, png_file), 100),
         click: () => {
-          Widget.success_copy_banner.show();
+          this.success_copy_banner.show();
           const gif_file = path.resolve(absolute_folder, png_file.replace(/\.png/, '.gif'));
           Operation.copy_gif(gif_file);
-          setTimeout(() => Widget.success_copy_banner.close(), 2000);
+          setTimeout(() => this.success_copy_banner.close(), 2000);
         },
       }));
 
-      return { label: folder, icon, submenu }
+      return { label: ' ', icon, submenu }
     });
 
     this.#main_menu = Menu.buildFromTemplate(contextMenuTemplate);
